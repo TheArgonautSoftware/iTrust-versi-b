@@ -30,6 +30,9 @@ import edu.ncsu.csc.itrust.controller.labProcedure.LabProcedureController;
 import edu.ncsu.csc.itrust.exception.DBException;
 import edu.ncsu.csc.itrust.exception.FormValidationException;
 import edu.ncsu.csc.itrust.model.ConverterDAO;
+import edu.ncsu.csc.itrust.model.hospital.Hospital;
+import edu.ncsu.csc.itrust.model.hospital.HospitalData;
+import edu.ncsu.csc.itrust.model.hospital.HospitalMySQLConverter;
 import edu.ncsu.csc.itrust.model.labProcedure.LabProcedure;
 import edu.ncsu.csc.itrust.model.labProcedure.LabProcedure.LabProcedureStatus;
 import edu.ncsu.csc.itrust.model.labProcedure.LabProcedureData;
@@ -317,6 +320,8 @@ public class LabProcedureControllerTest {
 	 */
 	@Test
 	public void testSetLabProcedureToReceivedStatus() throws DBException, FormValidationException {
+		HospitalData hData = new HospitalMySQLConverter(ds);
+		List<Hospital> all = hData.getAll();
 		DataSource mockDS = mock(DataSource.class);
 		controller = new LabProcedureController(mockDS);
 		controller = spy(controller);
@@ -475,10 +480,16 @@ public class LabProcedureControllerTest {
 
 	/**
 	 * Tests that remove() throws correct exception for invalid ID argument
+	 * @throws DBException 
 	 */
 	@Test
-	public void testRemoveInvalidID() throws SQLException, FileNotFoundException, IOException {
+	public void testRemoveInvalidID() throws SQLException, FileNotFoundException, IOException, DBException {
 		genLabProcedures0To5();
+		
+		HospitalData hData = new HospitalMySQLConverter(ds);
+		List<Hospital> all = hData.getAll();
+		
+		DataSource mockDS2 = mock(DataSource.class);
 
 		DataSource mockDS = Mockito.mock(DataSource.class);
 		LabProcedureData mockData = Mockito.mock(LabProcedureMySQL.class);
